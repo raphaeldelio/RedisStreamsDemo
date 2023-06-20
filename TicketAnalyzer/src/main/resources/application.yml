@@ -1,0 +1,9 @@
+boarding-pass:
+  stream-key: boarding-pass-stream
+  consumer-group: ticket-analyzer
+  pending-messages:
+    check-interval: 0/1 * * ? * *
+    timeout: 60000
+
+server:
+  port: 8081
