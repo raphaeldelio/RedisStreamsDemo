@@ -1,37 +1,55 @@
 package com.ticketscanner.ticketscanner
 
 import com.ticketscanner.ticketscanner.model.BoardingPass
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.redis.connection.stream.*
+import org.springframework.data.redis.connection.stream.MapRecord
+import org.springframework.data.redis.connection.stream.ObjectRecord
+import org.springframework.data.redis.connection.stream.StreamRecords
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
-import org.springframework.util.StopWatch
-
 
 @Service
-class BoardingPassService {
+class BoardingPassService(
+    private val redisTemplate: RedisTemplate<String, Any>,
+    private val fakeBoardingPassService: FakeBoardingPassService
+) {
+    private val streamKey: String = "boarding-pass-stream"
 
-    @Autowired
-    private lateinit var redisTemplate: RedisTemplate<String, Any>
+    fun addFakeBoardingPasses(pipelined: Boolean, numberOfTickets: Int) {
+        val boardingPasses = fakeBoardingPassService.generateFakeTickets(numberOfTickets)
+
+        if (pipelined)
+            addBoardingPassesPipelined(boardingPasses)
+        else
+            addBoardingPasses(boardingPasses)
+    }
 
     fun addBoardingPasses(boardingPasses: List<BoardingPass>) {
-        val records = boardingPasses.map {
-            MapRecord.create<ByteArray, ByteArray, ByteArray>(
-                "boarding-pass-stream".toByteArray(),
-                it.toMap()
-            )
+        logTimeSpent {
+            boardingPasses.forEach { boardingPass ->
+                val record: ObjectRecord<String, BoardingPass> = StreamRecords.newRecord()
+                    .ofObject<BoardingPass>(boardingPass)
+                    .withStreamKey(streamKey)
+
+                redisTemplate.opsForStream<Any, Any>()
+                    .add(record)
+            }
         }
+    }
 
-        val stopWatch = StopWatch()
-        stopWatch.start()
+    fun addBoardingPassesPipelined(boardingPasses: List<BoardingPass>) {
+        logTimeSpent {
+            val records = boardingPasses.map {
+                MapRecord.create<ByteArray, ByteArray, ByteArray>(
+                    streamKey.toByteArray(),
+                    it.toMap()
+                )
+            }
 
-        redisTemplate.executePipelined { connection ->
-            records.forEach { connection.xAdd(it) }
-            null
+            redisTemplate.executePipelined { connection ->
+                records.forEach { connection.xAdd(it) }
+                null
+            }
         }
-
-        stopWatch.stop()
-        println("Time taken to add ${boardingPasses.size} boarding passes: ${stopWatch.totalTimeMillis} ms")
     }
 }
 

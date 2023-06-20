@@ -1,7 +1,9 @@
 package com.ticketscanner.ticketscanner.model
 
+import org.springframework.data.annotation.TypeAlias
 import java.io.Serializable
 
+@TypeAlias("BoardingPass")
 data class BoardingPass (
     val passengerName: String,
     val flightNumber: String,
