@@ -1,10 +1,13 @@
 boarding-pass:
   stream-key: boarding-pass-stream
   consumer-group: ticket-validator
-  batch-size: 10000
+  batch-size: 1000000
   pending-messages:
     check-interval: 0/1 * * ? * *
     timeout: 60000
 
-server:
-  port: 8082
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
