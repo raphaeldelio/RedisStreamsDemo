@@ -1,4 +1,4 @@
-package com.raphaeldelio.ticketanalyzer.model
+package com.raphaeldelio.ticketvalidator.model
 
 import org.springframework.data.annotation.TypeAlias
 import java.io.Serializable

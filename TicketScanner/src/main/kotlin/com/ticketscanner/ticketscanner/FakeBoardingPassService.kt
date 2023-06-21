@@ -38,14 +38,15 @@ class FakeBoardingPassService {
             val flight = mutableFlights.shuffled().first()
 
             val boardingPass = BoardingPass(
+                ticketNumber = faker.number().digits(10),
                 passengerName = faker.name().fullName(),
-                flightNumber = flight.flightNumber,
-                departureAirportCode = flight.departureAirportCode,
+                flightNumber = flight.flightNumber.uppercase(),
+                departureAirportCode = flight.departureAirportCode.uppercase(),
                 departureTime = flight.departureTime,
-                arrivalAirportCode = flight.arrivalAirportCode,
+                arrivalAirportCode = flight.arrivalAirportCode.uppercase(),
                 arrivalTime = flight.arrivalTime,
-                gateNumber = flight.gateNumber,
-                seatNumber = faker.bothify("?#"),
+                gateNumber = flight.gateNumber.uppercase(),
+                seatNumber = faker.bothify("?#").uppercase(),
                 boardingGroup = faker.numerify("Group #")
             )
 

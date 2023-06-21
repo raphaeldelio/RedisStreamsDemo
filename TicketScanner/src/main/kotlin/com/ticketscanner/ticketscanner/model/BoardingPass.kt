@@ -5,6 +5,7 @@ import java.io.Serializable
 
 @TypeAlias("BoardingPass")
 data class BoardingPass (
+    val ticketNumber: String,
     val passengerName: String,
     val flightNumber: String,
     val departureAirportCode: String,
@@ -17,6 +18,7 @@ data class BoardingPass (
 ) : Serializable {
     fun toMap(): Map<ByteArray, ByteArray> =
         mapOf(
+            "ticketNumber".toByteArray() to this.ticketNumber.toString().toByteArray(),
             "passengerName".toByteArray() to this.passengerName.toByteArray(),
             "flightNumber".toByteArray() to this.flightNumber.toByteArray(),
             "departureAirportCode".toByteArray() to this.departureAirportCode.toByteArray(),

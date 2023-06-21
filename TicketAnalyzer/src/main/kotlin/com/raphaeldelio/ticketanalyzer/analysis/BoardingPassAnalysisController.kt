@@ -1,6 +1,6 @@
 package com.raphaeldelio.ticketanalyzer.analysis
 
-import com.raphaeldelio.ticketanalyzer.analysis.model.BoardingPassAnalysis
+import com.raphaeldelio.ticketanalyzer.analysis.flightnumber.FlightNumberAnalysis
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,7 +11,9 @@ class BoardingPassAnalysisController(
 ) {
 
     @PostMapping("passengers/top-10")
-    fun getTop10Passengers(): ResponseEntity<List<BoardingPassAnalysis?>> {
-        return ResponseEntity.ok(boardingPassAnalysisService.getTop10Passengers())
-    }
+    fun getTop10Flights(): ResponseEntity<List<FlightNumberAnalysis?>> =
+        ResponseEntity.ok(
+            boardingPassAnalysisService.getTop10Flights()
+        )
+
 }

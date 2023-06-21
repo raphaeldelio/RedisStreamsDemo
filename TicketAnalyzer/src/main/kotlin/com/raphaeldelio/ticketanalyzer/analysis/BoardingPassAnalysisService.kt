@@ -1,36 +1,38 @@
 package com.raphaeldelio.ticketanalyzer.analysis
 
-import com.raphaeldelio.ticketanalyzer.analysis.model.BoardingPassAnalysis
+import com.raphaeldelio.ticketanalyzer.analysis.flightnumber.FlightNumberAnalysisRepository
+import com.raphaeldelio.ticketanalyzer.analysis.flightnumber.FlightNumberAnalysis
 import com.raphaeldelio.ticketanalyzer.model.BoardingPass
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 
 @Service
 class BoardingPassAnalysisService(
-    val boardingPassAnalysisRepository: BoardingPassAnalysisRepository
+    val flightNumberAnalysisRepository: FlightNumberAnalysisRepository
 ) {
     fun processBoardingPass(boardingPass: BoardingPass) {
         println("Received boarding pass: $boardingPass")
-        val fromDB = boardingPassAnalysisRepository.findById(boardingPass.flightNumber)
+        processFlightNumber(boardingPass)
+    }
+
+    private fun processFlightNumber(boardingPass: BoardingPass) {
+        val fromDB = flightNumberAnalysisRepository.findById(boardingPass.flightNumber)
         var count = 0
         fromDB.ifPresentOrElse(
             { count = it.count + 1 },
             { count = 1 }
         )
 
-        boardingPassAnalysisRepository.save(
-            BoardingPassAnalysis(
+        flightNumberAnalysisRepository.save(
+            FlightNumberAnalysis(
                 boardingPass.flightNumber,
                 count
             )
         )
     }
 
-    fun getTop10Passengers() = boardingPassAnalysisRepository.findByOrderByCountDesc(
+    fun getTop10Flights() = flightNumberAnalysisRepository.findByOrderByCountDesc(
             Pageable.ofSize(10)
         )?.toList() ?: emptyList()
 }
