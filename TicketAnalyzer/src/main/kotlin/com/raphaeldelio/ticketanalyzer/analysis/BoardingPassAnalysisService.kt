@@ -30,9 +30,7 @@ class BoardingPassAnalysisService(
         )
     }
 
-    fun getTop10Passengers(): List<BoardingPassAnalysis?> {
-        return boardingPassAnalysisRepository.findByOrderByCountDesc(
+    fun getTop10Passengers() = boardingPassAnalysisRepository.findByOrderByCountDesc(
             Pageable.ofSize(10)
         )?.toList() ?: emptyList()
-    }
 }

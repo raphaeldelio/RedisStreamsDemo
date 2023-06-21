@@ -1,6 +1,7 @@
 boarding-pass:
   stream-key: boarding-pass-stream
   consumer-group: ticket-analyzer
+  batch-size: 10000
   pending-messages:
     check-interval: 0/1 * * ? * *
     timeout: 60000

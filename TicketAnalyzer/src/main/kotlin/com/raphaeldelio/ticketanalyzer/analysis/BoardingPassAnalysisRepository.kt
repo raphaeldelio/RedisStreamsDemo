@@ -7,7 +7,5 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface BoardingPassAnalysisRepository : CrudRepository<BoardingPassAnalysis, String> {
-    fun findByName(name: String): Optional<BoardingPassAnalysis>
-
     fun findByOrderByCountDesc(pageable: Pageable?): Page<BoardingPassAnalysis?>?
 }

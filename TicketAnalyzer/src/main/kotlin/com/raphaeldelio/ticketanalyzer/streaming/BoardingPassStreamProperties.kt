@@ -5,7 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class BoardingPassStreamProperties(
     val streamKey: String,
     val consumerGroup: String,
-    val pendingMessages: PendingMessagesProperties
+    val pendingMessages: PendingMessagesProperties,
+    val batchSize: Int,
 )
 class PendingMessagesProperties(
     val timeout: String

@@ -40,6 +40,7 @@ class BoardingPassStreamListenenerConfig(
         val options = StreamMessageListenerContainerOptions
                 .builder()
                 .pollTimeout(Duration.ofMillis(100))
+                .batchSize(boardingPassStreamProperties.batchSize.toInt())
                 .build()
 
         val container = StreamMessageListenerContainer
@@ -63,7 +64,7 @@ class BoardingPassStreamListenenerConfig(
         streamKey: String,
         groupName: String
     ) {
-try {
+        try {
             redisConnectionFactory.connection.streamCommands()
                 .xGroupCreate(
                     streamKey.toByteArray(),
